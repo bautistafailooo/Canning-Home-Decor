@@ -17,6 +17,8 @@ public interface ProductService {
     Page<Product> getProductsByCategory(Long categoryId, PageRequest pageRequest);
 
     Page<Product> getProductsBySeller(Long sellerId, PageRequest pageRequest);
+    
+    Page<Product> getProductsByPriceRange(Double minPrice, Double maxPrice, PageRequest pageRequest);
 
     Optional<Product> getProductById(Long productId);
 

@@ -35,7 +35,9 @@ public class ProductsController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Long sellerId) {
+            @RequestParam(required = false) Long sellerId,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
 
         PageRequest pageRequest = (page == null || size == null)
                 ? PageRequest.of(0, Integer.MAX_VALUE)
@@ -46,6 +48,9 @@ public class ProductsController {
 
         if (sellerId != null)
             return ResponseEntity.ok(productService.getProductsBySeller(sellerId, pageRequest));
+
+        if (minPrice != null && maxPrice != null)
+            return ResponseEntity.ok(productService.getProductsByPriceRange(minPrice, maxPrice, pageRequest));
 
         return ResponseEntity.ok(productService.getProducts(pageRequest));
     }

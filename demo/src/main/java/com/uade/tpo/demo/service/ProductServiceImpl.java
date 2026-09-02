@@ -33,6 +33,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findBySellerId(sellerId, pageRequest);
     }
 
+    public Page<Product> getProductsByPriceRange(Double minPrice, Double maxPrice, PageRequest pageRequest) {
+        return productRepository.findByPriceBetween(minPrice, maxPrice, pageRequest);
+    }
+
     public Optional<Product> getProductById(Long productId) {
         return productRepository.findById(productId);
     }
