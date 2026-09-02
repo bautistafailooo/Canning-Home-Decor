@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import jakarta.persistence.Transient;
 
 @Data
 @Entity
@@ -37,4 +38,12 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private User seller;
+
+        @Transient
+    public Double getFinalPrice() {
+        if (price == null)
+            return null;
+        double discountPercentage = discount != null ? discount : 0.0;
+        return price * (1 - discountPercentage / 100.0);
+    }
 }
