@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/categories/**").hasAnyAuthority(Role.USER.name())
                         .requestMatchers("/products/**").hasAnyAuthority(Role.USER.name())
                         .requestMatchers("/users/**").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers("/cart/**").hasAnyAuthority(Role.USER.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
