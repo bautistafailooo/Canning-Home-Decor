@@ -31,6 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/error/**").permitAll()
                         .requestMatchers("/categories/**").hasAnyAuthority(Role.USER.name())
                         .requestMatchers("/products/**").hasAnyAuthority(Role.USER.name())
+                        .requestMatchers("/users/**").hasAnyAuthority(Role.ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

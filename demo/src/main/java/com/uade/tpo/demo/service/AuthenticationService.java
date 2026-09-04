@@ -23,7 +23,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        var user = User.builder()
+                var user = User.builder()
+                .username(request.getUsername())
                 .name(request.getFirstname())
                 .surname(request.getLastname())
                 .email(request.getEmail())

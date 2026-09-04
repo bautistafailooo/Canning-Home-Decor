@@ -19,6 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Data
 @Builder
@@ -33,11 +35,16 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String surname;
+
 
     @Column(nullable = false)
     private String password;
@@ -54,10 +61,16 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getUsername() {
         return email;
     }
 
+    @JsonProperty("username")
+    public String getRegisteredUsername() {
+        return this.username;
+    }
+    
     @Override
     public boolean isAccountNonExpired() {
         return true;
