@@ -10,18 +10,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import lombok.Data;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
-        @ManyToOne
+    @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     private Order order;
 
     @ManyToOne

@@ -18,7 +18,9 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,9 +29,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -46,6 +50,7 @@ public class User implements UserDetails {
 
     // El hash NUNCA debe viajar en una respuesta JSON.
     @JsonIgnore
+    @ToString.Exclude
     @Column(nullable = false)
     private String password;
 
@@ -54,6 +59,7 @@ public class User implements UserDetails {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Order> orders;
 
     @Override

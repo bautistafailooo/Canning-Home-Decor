@@ -9,10 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Category {
 
     public Category() {
@@ -24,6 +27,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column
@@ -31,5 +35,6 @@ public class Category {
 
     @JsonIgnore
     @OneToMany(mappedBy = "category")
+    @ToString.Exclude
     private List<Product> products;
 }

@@ -18,13 +18,20 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Data
+// equals y hashCode SOLO por id. Sin esto, @Data los genera con todos los
+// campos y la relacion bidireccional Order <-> OrderItem provoca una
+// recursion infinita (StackOverflowError).
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -34,10 +41,11 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
+    @ToString.Exclude
     private User user;
 
-    // Inicializada para que un carrito recien creado nunca tenga items en null.
     @OneToMany(mappedBy = "order")
+    @ToString.Exclude
     private List<OrderItem> items = new ArrayList<>();
 
     @Transient

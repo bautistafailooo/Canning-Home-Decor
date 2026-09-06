@@ -17,12 +17,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @Entity
+// equals y hashCode SOLO por id, para evitar la recursion infinita que
+// provoca la relacion bidireccional Product <-> Category.
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column
@@ -47,12 +53,14 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Category category;
 
     // Usuario vendedor que publico el producto
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    @ToString.Exclude
     private User seller;
 
     @Transient
