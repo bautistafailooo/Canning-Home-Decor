@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.demo.entity.Order;
 import com.uade.tpo.demo.entity.User;
 import com.uade.tpo.demo.entity.dto.CartItemRequest;
+import com.uade.tpo.demo.exceptions.EmptyCartException;
 import com.uade.tpo.demo.exceptions.InsufficientStockException;
+import com.uade.tpo.demo.exceptions.InvalidQuantityException;
 import com.uade.tpo.demo.exceptions.OrderNotFoundException;
 import com.uade.tpo.demo.exceptions.ProductNotFoundException;
 import com.uade.tpo.demo.service.CartService;
@@ -36,7 +38,8 @@ public class CartController {
     @PostMapping("/items")
     public ResponseEntity<Order> addItem(
             @AuthenticationPrincipal User user,
-            @RequestBody CartItemRequest request) throws ProductNotFoundException, InsufficientStockException {
+            @RequestBody CartItemRequest request)
+            throws ProductNotFoundException, InsufficientStockException, InvalidQuantityException {
         return ResponseEntity.ok(cartService.addItem(user, request));
     }
 
@@ -57,7 +60,7 @@ public class CartController {
 
     @PostMapping("/checkout")
     public ResponseEntity<Order> checkout(@AuthenticationPrincipal User user)
-            throws OrderNotFoundException, InsufficientStockException {
+            throws OrderNotFoundException, InsufficientStockException, EmptyCartException {
         return ResponseEntity.ok(cartService.checkout(user));
     }
 }

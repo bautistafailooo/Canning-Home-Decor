@@ -9,6 +9,7 @@ import com.uade.tpo.demo.controllers.auth.AuthenticationRequest;
 import com.uade.tpo.demo.controllers.auth.AuthenticationResponse;
 import com.uade.tpo.demo.controllers.auth.RegisterRequest;
 import com.uade.tpo.demo.controllers.config.JwtService;
+import com.uade.tpo.demo.entity.Role;
 import com.uade.tpo.demo.entity.User;
 import com.uade.tpo.demo.repository.UserRepository;
 
@@ -23,13 +24,17 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-                var user = User.builder()
+        // Si el rol no viene en el JSON se guardaba null y el primer request
+        // autenticado explotaba en getAuthorities().
+        Role role = request.getRole() != null ? request.getRole() : Role.USER;
+
+        var user = User.builder()
                 .username(request.getUsername())
                 .name(request.getFirstname())
                 .surname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(role)
                 .build();
 
         repository.save(user);

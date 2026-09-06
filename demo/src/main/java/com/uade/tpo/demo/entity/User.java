@@ -35,7 +35,6 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
-    
     @Column(nullable = false, unique = true)
     private String username;
 
@@ -45,48 +44,57 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String surname;
 
-
+    // El hash NUNCA debe viajar en una respuesta JSON.
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    // Spring Security usa el email como identificador de login.
     @Override
     @JsonIgnore
     public String getUsername() {
         return email;
     }
 
+    // El "nombre de usuario" que pide el enunciado, expuesto en el JSON.
     @JsonProperty("username")
     public String getRegisteredUsername() {
         return this.username;
     }
-    
+
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

@@ -1,5 +1,7 @@
 package com.uade.tpo.demo.entity.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -10,4 +12,5 @@ public class ProductRequest {
     private Double discount;
     private Long categoryId;
     private Long sellerId;
+    private List<String> imageUrls;
 }

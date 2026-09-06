@@ -13,13 +13,21 @@ import com.uade.tpo.demo.entity.User;
 import com.uade.tpo.demo.entity.dto.ProductRequest;
 import com.uade.tpo.demo.exceptions.InsufficientStockException;
 import com.uade.tpo.demo.exceptions.ProductNotFoundException;
+import com.uade.tpo.demo.repository.CategoryRepository;
 import com.uade.tpo.demo.repository.ProductRepository;
+import com.uade.tpo.demo.repository.UserRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public Page<Product> getProducts(PageRequest pageRequest) {
         return productRepository.findAll(pageRequest);
@@ -35,6 +43,16 @@ public class ProductServiceImpl implements ProductService {
 
     public Page<Product> getProductsByPriceRange(Double minPrice, Double maxPrice, PageRequest pageRequest) {
         return productRepository.findByPriceBetween(minPrice, maxPrice, pageRequest);
+    }
+
+    public Page<Product> searchProducts(Long categoryId, Long sellerId, Double minPrice,
+                                        Double maxPrice, String search, PageRequest pageRequest) {
+
+        // Un search vacio se trata como si no se hubiera enviado.
+        String normalizedSearch = (search == null || search.isBlank()) ? null : search.trim();
+
+        return productRepository.findWithFilters(
+                categoryId, sellerId, minPrice, maxPrice, normalizedSearch, pageRequest);
     }
 
     public Optional<Product> getProductById(Long productId) {
@@ -85,16 +103,23 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(request.getStock());
         product.setDiscount(request.getDiscount() != null ? request.getDiscount() : 0.0);
 
+        // Se busca la categoria real en vez de crear una instancia solo con el id.
+        // Asi un categoryId inexistente devuelve 404 y no un error de foreign key.
         if (request.getCategoryId() != null) {
-            Category category = new Category();
-            category.setId(request.getCategoryId());
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElse(null);
             product.setCategory(category);
         }
 
         if (request.getSellerId() != null) {
-            User seller = new User();
-            seller.setId(request.getSellerId());
+            User seller = userRepository.findById(request.getSellerId())
+                    .orElse(null);
             product.setSeller(seller);
+        }
+
+        if (request.getImageUrls() != null) {
+            product.getImageUrls().clear();
+            product.getImageUrls().addAll(request.getImageUrls());
         }
     }
 }

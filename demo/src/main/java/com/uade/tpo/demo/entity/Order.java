@@ -1,5 +1,6 @@
 package com.uade.tpo.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,8 +36,9 @@ public class Order {
     @JsonIgnore
     private User user;
 
+    // Inicializada para que un carrito recien creado nunca tenga items en null.
     @OneToMany(mappedBy = "order")
-    private List<OrderItem> items;
+    private List<OrderItem> items = new ArrayList<>();
 
     @Transient
     public Double getTotal() {

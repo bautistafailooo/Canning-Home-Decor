@@ -17,8 +17,12 @@ public interface ProductService {
     Page<Product> getProductsByCategory(Long categoryId, PageRequest pageRequest);
 
     Page<Product> getProductsBySeller(Long sellerId, PageRequest pageRequest);
-    
+
     Page<Product> getProductsByPriceRange(Double minPrice, Double maxPrice, PageRequest pageRequest);
+
+    // Busqueda combinada: cualquier filtro puede venir en null y se ignora.
+    Page<Product> searchProducts(Long categoryId, Long sellerId, Double minPrice,
+                                 Double maxPrice, String search, PageRequest pageRequest);
 
     Optional<Product> getProductById(Long productId);
 

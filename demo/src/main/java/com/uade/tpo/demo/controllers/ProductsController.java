@@ -30,6 +30,13 @@ public class ProductsController {
     @Autowired
     private ProductService productService;
 
+    // Todos los filtros son opcionales y se combinan entre si.
+    // Ejemplos:
+    //   /products
+    //   /products?categoryId=1
+    //   /products?categoryId=1&minPrice=50000&maxPrice=200000
+    //   /products?search=roble
+    //   /products?minPrice=500000
     @GetMapping
     public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(required = false) Integer page,
@@ -37,22 +44,15 @@ public class ProductsController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) Long sellerId,
             @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice) {
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String search) {
 
         PageRequest pageRequest = (page == null || size == null)
                 ? PageRequest.of(0, Integer.MAX_VALUE)
                 : PageRequest.of(page, size);
 
-        if (categoryId != null)
-            return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageRequest));
-
-        if (sellerId != null)
-            return ResponseEntity.ok(productService.getProductsBySeller(sellerId, pageRequest));
-
-        if (minPrice != null && maxPrice != null)
-            return ResponseEntity.ok(productService.getProductsByPriceRange(minPrice, maxPrice, pageRequest));
-
-        return ResponseEntity.ok(productService.getProducts(pageRequest));
+        return ResponseEntity.ok(productService.searchProducts(
+                categoryId, sellerId, minPrice, maxPrice, search, pageRequest));
     }
 
     @GetMapping("/{productId}")
