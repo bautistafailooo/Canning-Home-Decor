@@ -32,4 +32,13 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryRepository.save(new Category(description));
         throw new CategoryDuplicateException();
     }
+        public Category updateCategory(Long categoryId, String description) throws CategoryDuplicateException {
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        category.setDescription(description);
+        return categoryRepository.save(category);
+    }
+
+    public void deleteCategory(Long categoryId) {
+        categoryRepository.deleteById(categoryId);
+    }
 }

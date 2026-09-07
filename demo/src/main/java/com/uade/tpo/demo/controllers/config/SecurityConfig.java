@@ -41,6 +41,8 @@ public class SecurityConfig {
                         // --- Catalogo: leer lo puede cualquier usuario logueado ---
                         .requestMatchers(HttpMethod.GET, "/products/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/categories/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/categories/**").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasAuthority(Role.ADMIN.name())
 
                         // --- Catalogo: escribir solo el ADMIN (es quien vende) ---
                         .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(Role.ADMIN.name())
