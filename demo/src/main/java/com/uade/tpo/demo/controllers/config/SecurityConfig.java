@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     // Modelo de e-commerce propio:
-    //   USER  = comprador. Navega el catalogo y compra.
+    //   USER  = comprador. Navega el catalogo, compra y ve su historial.
     //   ADMIN = el emprendimiento. Publica productos, maneja stock,
     //           crea categorias y administra las cuentas de usuario.
     @Bean
@@ -41,8 +41,6 @@ public class SecurityConfig {
                         // --- Catalogo: leer lo puede cualquier usuario logueado ---
                         .requestMatchers(HttpMethod.GET, "/products/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/categories/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/categories/**").hasAuthority(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasAuthority(Role.ADMIN.name())
 
                         // --- Catalogo: escribir solo el ADMIN (es quien vende) ---
                         .requestMatchers(HttpMethod.POST, "/products/**").hasAuthority(Role.ADMIN.name())
@@ -53,6 +51,9 @@ public class SecurityConfig {
 
                         // --- Carrito y compra: solo el comprador ---
                         .requestMatchers("/cart/**").hasAuthority(Role.USER.name())
+
+                        // --- Historial de compras: solo el comprador ---
+                        .requestMatchers("/orders/**").hasAuthority(Role.USER.name())
 
                         // --- Gestion de cuentas y permisos: solo el ADMIN ---
                         .requestMatchers("/users/**").hasAuthority(Role.ADMIN.name())

@@ -1,5 +1,6 @@
 package com.uade.tpo.demo.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +22,15 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+/**
+ * Orden de compra confirmada. Se crea en el checkout a partir del carrito.
+ */
 @Entity
 @Data
-// equals y hashCode SOLO por id. Sin esto, @Data los genera con todos los
-// campos y la relacion bidireccional Order <-> OrderItem provoca una
-// recursion infinita (StackOverflowError).
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "orders")
 public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -37,6 +39,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

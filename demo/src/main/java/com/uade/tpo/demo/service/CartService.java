@@ -1,5 +1,6 @@
 package com.uade.tpo.demo.service;
 
+import com.uade.tpo.demo.entity.Cart;
 import com.uade.tpo.demo.entity.Order;
 import com.uade.tpo.demo.entity.User;
 import com.uade.tpo.demo.entity.dto.CartItemRequest;
@@ -11,16 +12,19 @@ import com.uade.tpo.demo.exceptions.ProductNotFoundException;
 
 public interface CartService {
 
-    Order getCart(User user);
+    Cart getCart(User user);
 
-    Order addItem(User user, CartItemRequest request)
+    Cart addItem(User user, CartItemRequest request)
             throws ProductNotFoundException, InsufficientStockException, InvalidQuantityException;
 
-    Order updateItem(User user, Long itemId, Integer quantity)
+    Cart updateItem(User user, Long itemId, Integer quantity)
             throws OrderNotFoundException, InsufficientStockException;
 
-    Order removeItem(User user, Long itemId) throws OrderNotFoundException;
+    Cart removeItem(User user, Long itemId) throws OrderNotFoundException;
 
+    Cart clear(User user);
+
+    // Confirma la compra: crea una Order a partir del carrito y lo vacia
     Order checkout(User user)
-            throws OrderNotFoundException, InsufficientStockException, EmptyCartException;
+            throws EmptyCartException, InsufficientStockException, ProductNotFoundException;
 }

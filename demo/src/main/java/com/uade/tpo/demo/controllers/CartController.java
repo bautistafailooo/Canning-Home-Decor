@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.demo.entity.Cart;
 import com.uade.tpo.demo.entity.Order;
 import com.uade.tpo.demo.entity.User;
 import com.uade.tpo.demo.entity.dto.CartItemRequest;
@@ -31,12 +32,12 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping
-    public ResponseEntity<Order> getCart(@AuthenticationPrincipal User user) {
+    public ResponseEntity<Cart> getCart(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(cartService.getCart(user));
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Order> addItem(
+    public ResponseEntity<Cart> addItem(
             @AuthenticationPrincipal User user,
             @RequestBody CartItemRequest request)
             throws ProductNotFoundException, InsufficientStockException, InvalidQuantityException {
@@ -44,7 +45,7 @@ public class CartController {
     }
 
     @PutMapping("/items/{itemId}")
-    public ResponseEntity<Order> updateItem(
+    public ResponseEntity<Cart> updateItem(
             @AuthenticationPrincipal User user,
             @PathVariable Long itemId,
             @RequestParam Integer quantity) throws OrderNotFoundException, InsufficientStockException {
@@ -52,15 +53,21 @@ public class CartController {
     }
 
     @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<Order> removeItem(
+    public ResponseEntity<Cart> removeItem(
             @AuthenticationPrincipal User user,
             @PathVariable Long itemId) throws OrderNotFoundException {
         return ResponseEntity.ok(cartService.removeItem(user, itemId));
     }
 
+    // Vacia el carrito completo
+    @DeleteMapping
+    public ResponseEntity<Cart> clear(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(cartService.clear(user));
+    }
+
     @PostMapping("/checkout")
     public ResponseEntity<Order> checkout(@AuthenticationPrincipal User user)
-            throws OrderNotFoundException, InsufficientStockException, EmptyCartException {
+            throws EmptyCartException, InsufficientStockException, ProductNotFoundException {
         return ResponseEntity.ok(cartService.checkout(user));
     }
 }

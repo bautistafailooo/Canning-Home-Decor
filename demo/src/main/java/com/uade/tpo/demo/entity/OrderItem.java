@@ -13,10 +13,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+/**
+ * Una linea de una orden confirmada.
+ */
 @Entity
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
