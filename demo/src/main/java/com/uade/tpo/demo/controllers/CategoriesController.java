@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.demo.entity.Category;
 import com.uade.tpo.demo.entity.dto.CategoryRequest;
 import com.uade.tpo.demo.exceptions.CategoryDuplicateException;
+import com.uade.tpo.demo.exceptions.CategoryInUseException;
+import com.uade.tpo.demo.exceptions.CategoryNotFoundException;
 import com.uade.tpo.demo.service.CategoryService;
 import com.uade.tpo.demo.service.CategoryServiceImpl;
 
@@ -57,16 +59,18 @@ public class CategoriesController {
         Category result = categoryService.createCategory(categoryRequest.getDescription());
         return ResponseEntity.created(URI.create("/categories/" + result.getId())).body(result);
     }
-    
-        @PutMapping("/{categoryId}")
+
+    @PutMapping("/{categoryId}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long categoryId,
-            @RequestBody CategoryRequest categoryRequest) throws CategoryDuplicateException {
+            @RequestBody CategoryRequest categoryRequest)
+            throws CategoryDuplicateException, CategoryNotFoundException {
         Category result = categoryService.updateCategory(categoryId, categoryRequest.getDescription());
         return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<Object> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<Object> deleteCategory(@PathVariable Long categoryId)
+            throws CategoryNotFoundException, CategoryInUseException {
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }

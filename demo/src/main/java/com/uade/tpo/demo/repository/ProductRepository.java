@@ -14,6 +14,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
 
+    // Spring Data arma la consulta sola a partir del nombre del metodo.
+    // Se usa para no borrar una categoria que todavia tiene productos.
+    long countByCategoryId(Long categoryId);
+
     Page<Product> findBySellerId(Long sellerId, Pageable pageable);
 
     Page<Product> findByPriceBetween(Double minPrice, Double maxPrice, Pageable pageable);

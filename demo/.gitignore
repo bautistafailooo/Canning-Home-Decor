@@ -35,3 +35,7 @@ build/
 .idea/
 ### Fotos subidas desde el panel ###
 uploads/
+
+### Basura de macOS y logs de build ###
+.DS_Store
+log.txt
