@@ -57,6 +57,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/error/**").permitAll()
 
+                        // --- Imagenes subidas ---
+                        // Verlas es publico (van en el catalogo); subirlas,
+                        // solo el administrador.
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                        .requestMatchers("/uploads/**").hasAuthority(Role.ADMIN.name())
+
                         // --- Catalogo: leer es publico ---
                         // Cualquiera puede ver los productos sin registrarse,
                         // como en cualquier tienda online. El login se pide
