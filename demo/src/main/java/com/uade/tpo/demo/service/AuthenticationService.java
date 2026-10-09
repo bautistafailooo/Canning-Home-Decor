@@ -37,11 +37,8 @@ public class AuthenticationService {
                 .role(role)
                 .build();
 
-        repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .build();
+        // save devuelve el usuario con el id que le asigno la base.
+        return buildResponse(repository.save(user));
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -52,9 +49,19 @@ public class AuthenticationService {
 
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        return buildResponse(user);
+    }
+
+    // Token + datos del usuario en una sola respuesta.
+    private AuthenticationResponse buildResponse(User user) {
         return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
+                .accessToken(jwtService.generateToken(user))
+                .id(user.getId())
+                .email(user.getEmail())
+                .username(user.getRegisteredUsername())
+                .name(user.getName())
+                .surname(user.getSurname())
+                .role(user.getRole())
                 .build();
     }
 }
