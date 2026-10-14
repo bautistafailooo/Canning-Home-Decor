@@ -46,13 +46,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public Page<Product> searchProducts(Long categoryId, Long sellerId, Double minPrice,
-                                        Double maxPrice, String search, PageRequest pageRequest) {
+                                        Double maxPrice, String search, boolean includeInactive,
+                                        PageRequest pageRequest) {
 
         // Un search vacio se trata como si no se hubiera enviado.
         String normalizedSearch = (search == null || search.isBlank()) ? null : search.trim();
 
         return productRepository.findWithFilters(
-                categoryId, sellerId, minPrice, maxPrice, normalizedSearch, pageRequest);
+                categoryId, sellerId, minPrice, maxPrice, normalizedSearch, includeInactive, pageRequest);
     }
 
     public Optional<Product> getProductById(Long productId) {
@@ -72,10 +73,18 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
+    // Baja logica: el producto sale del catalogo y la fila queda. Asi las
+    // ordenes que lo incluyen siguen mostrando que se compro, y ademas se
+    // puede volver a publicar sin cargarlo de nuevo.
     public void deleteProduct(Long productId) throws ProductNotFoundException {
+        setActive(productId, false);
+    }
+
+    public Product setActive(Long productId, boolean active) throws ProductNotFoundException {
         Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
-        productRepository.delete(product);
+        product.setActive(active);
+        return productRepository.save(product);
     }
 
     public Product updateStock(Long productId, Integer newStock) throws ProductNotFoundException {

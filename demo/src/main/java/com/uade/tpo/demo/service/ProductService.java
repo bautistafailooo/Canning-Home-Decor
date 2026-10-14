@@ -22,7 +22,8 @@ public interface ProductService {
 
     // Busqueda combinada: cualquier filtro puede venir en null y se ignora.
     Page<Product> searchProducts(Long categoryId, Long sellerId, Double minPrice,
-                                 Double maxPrice, String search, PageRequest pageRequest);
+                                 Double maxPrice, String search, boolean includeInactive,
+                                 PageRequest pageRequest);
 
     Optional<Product> getProductById(Long productId);
 
@@ -30,7 +31,10 @@ public interface ProductService {
 
     Product updateProduct(Long productId, ProductRequest productRequest) throws ProductNotFoundException;
 
+    // Da de baja el producto: sale del catalogo, pero la fila queda.
     void deleteProduct(Long productId) throws ProductNotFoundException;
+
+    Product setActive(Long productId, boolean active) throws ProductNotFoundException;
 
     Product updateStock(Long productId, Integer newStock) throws ProductNotFoundException;
 

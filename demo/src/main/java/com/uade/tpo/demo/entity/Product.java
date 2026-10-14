@@ -40,6 +40,17 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
+    // Baja logica. Borrar de verdad un producto que ya figura en una
+    // orden rompe la clave foranea de order_item, y ademas se perderia
+    // el historial de quien lo compro. Dar de baja lo saca del catalogo
+    // y deja la fila donde esta.
+    //
+    // columnDefinition pone el DEFAULT TRUE en la tabla: asi los
+    // productos que ya existian quedan publicados cuando Hibernate
+    // agrega la columna, en vez de darse de baja todos juntos.
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean active = true;
+
     // Porcentaje de descuento sobre el precio (0 a 100). 0 = sin descuento.
     @Column
     private Double discount = 0.0;

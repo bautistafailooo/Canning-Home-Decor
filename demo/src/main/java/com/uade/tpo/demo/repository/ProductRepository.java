@@ -31,12 +31,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             + "(:sellerId IS NULL OR p.seller.id = :sellerId) AND "
             + "(:minPrice IS NULL OR p.price >= :minPrice) AND "
             + "(:maxPrice IS NULL OR p.price <= :maxPrice) AND "
-            + "(:search IS NULL OR LOWER(p.description) LIKE LOWER(CONCAT('%', :search, '%')))")
+            + "(:search IS NULL OR LOWER(p.description) LIKE LOWER(CONCAT('%', :search, '%'))) AND "
+            // includeInactive lo manda solo el panel de administracion.
+            // Para cualquier otro llamado vale false y los productos
+            // dados de baja no aparecen.
+            + "(:includeInactive = true OR p.active = true)")
     Page<Product> findWithFilters(
             @Param("categoryId") Long categoryId,
             @Param("sellerId") Long sellerId,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
             @Param("search") String search,
+            @Param("includeInactive") boolean includeInactive,
             Pageable pageable);
 }

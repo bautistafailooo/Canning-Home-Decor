@@ -65,6 +65,12 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(ProductNotFoundException::new);
 
+        // Un producto dado de baja no se puede agregar al carrito.
+        // Para quien compra es como si no existiera, asi que se usa la
+        // misma excepcion que cuando el id no esta.
+        if (!product.getActive())
+            throw new ProductNotFoundException();
+
         CartItem item = cartItemRepository
                 .findByCartIdAndProductId(cart.getId(), product.getId())
                 .orElse(null);
