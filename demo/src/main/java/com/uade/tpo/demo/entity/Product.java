@@ -31,8 +31,17 @@ public class Product {
     @EqualsAndHashCode.Include
     private Long id;
 
+    // Ojo con el nombre: description es el NOMBRE del producto
+    // ("Sillon de pana dos cuerpos"), no su descripcion. Viene asi
+    // desde el principio y lo mismo pasa en Category.
     @Column
     private String description;
+
+    // La descripcion de verdad: el texto largo que se lee en el
+    // detalle. Es opcional, y 1000 caracteres alcanzan de sobra para
+    // un parrafo o dos sobre materiales y medidas.
+    @Column(length = 1000)
+    private String details;
 
     @Column(nullable = false)
     private Double price;

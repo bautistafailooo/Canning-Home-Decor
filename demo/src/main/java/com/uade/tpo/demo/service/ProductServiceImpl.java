@@ -108,6 +108,7 @@ public class ProductServiceImpl implements ProductService {
 
     private void applyRequestToProduct(Product product, ProductRequest request) {
         product.setDescription(request.getDescription());
+        product.setDetails(request.getDetails());
         product.setPrice(request.getPrice());
         product.setStock(request.getStock());
         product.setDiscount(request.getDiscount() != null ? request.getDiscount() : 0.0);
